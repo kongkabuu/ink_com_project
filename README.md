@@ -1,1 +1,0 @@
-# ink_com_project
