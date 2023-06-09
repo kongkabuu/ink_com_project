@@ -1,21 +1,53 @@
-import ArticleCard from "./Article";
+import ArticleCardFull from "./Article";
+import ArticleCardThumbnail from "./ArticleCardThumbnail";
 
-function Articlelist() {
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+function ArticleList() {
+  const [articles, setArticles] = useState([]);
+  const [showFullCard, setShowFullCard] = useState(false);
+
+  useEffect(() => {
+    // Fetch the articles from your API
+    axios
+      .get("/articles")
+      .then((response) => {
+        setArticles(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching articles:", error);
+      });
+  }, []);
+
+  const handleButtonClick = () => {
+    setShowFullCard(!showFullCard);
+  };
+
   return (
-    <div className="flex flex-wrap justify-center">
-      <ArticleCard
-        title="Article Title 1"
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat sagittis dolor, vitae feugiat sapien imperdiet sit amet. Nullam vitae risus et dui congue efficitur."
-        image="article-image1.jpg"
-      />
-      <ArticleCard
-        title="Article Title 2"
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat sagittis dolor, vitae feugiat sapien imperdiet sit amet. Nullam vitae risus et dui congue efficitur."
-        image="article-image2.jpg"
-      />
-      {/* Add more ArticleCard components for additional articles */}
+    <div className="h-screen">
+      {articles.map((article) => (
+        <div key={article.id}>
+          {!showFullCard && (
+            <ArticleCardThumbnail
+              title={article.title}
+              image={article.image_path}
+              handleButtonClick={handleButtonClick}
+            />
+          )}
+
+          {showFullCard && (
+            <ArticleCardFull
+              title={article.title}
+              content={article.content}
+              image={article.image_path}
+              handleButtonClick={handleButtonClick}
+            />
+          )}
+        </div>
+      ))}
     </div>
   );
 }
 
-export default Articlelist;
+export default ArticleList;

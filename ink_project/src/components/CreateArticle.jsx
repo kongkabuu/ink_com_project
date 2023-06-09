@@ -32,7 +32,7 @@ function CreateArticle() {
   };
 
   return (
-    <div>
+    <div className="h-screen">
       <h2 className="text-2xl font-bold mb-4">Create Your Own Article</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
