@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
+import axios from "axios";
 
 function CreateArticle() {
   const [title, setTitle] = useState("");
@@ -19,16 +20,34 @@ function CreateArticle() {
     setContent(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Perform article submission logic here
-    // You can access the title, image, and content states to submit the article data
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("image_path", image);
+    formData.append("content", content);
 
-    // Reset form fields
-    setTitle("");
-    setImage(null);
-    setContent("");
+    try {
+      const response = await axios.post(
+        "http://localhost:9292/articles",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Article submitted successfully:", response.data);
+
+      // Reset form fields
+      setTitle("");
+      setImage(null);
+      setContent("");
+    } catch (error) {
+      console.log("Error submitting article:", error);
+    }
   };
 
   return (
